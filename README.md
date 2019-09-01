@@ -2,7 +2,7 @@
 
 ## To do in order to play on TV with a device from the couch:
 
-### 1. serve script from node scripted server
+### ~~1. serve script from node scripted server~~
 
 ### 2. make controller with arrow keys
 
