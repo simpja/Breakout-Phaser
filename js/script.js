@@ -23,7 +23,7 @@ function preload() {
   //Aligns the canvas in the middle between top and bottom of the screen
   game.scale.pageAlignVertically = true;
   //The same as over, but in the middle of left and right
-  game.stage.backgroundColor = "#ffccdd";
+  game.stage.backgroundColor = "#43d32f";
   game.load.image("ball", "img/ball.png");
   game.load.image("paddle", "img/paddle.png");
   game.load.image("brick", "img/brick.png");

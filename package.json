@@ -1,0 +1,31 @@
+{
+  "name": "breakoutphaser",
+  "version": "1.0.0",
+  "description": "breakout game with external controllers",
+  "main": "server.js",
+  "scripts": {
+    "test": "test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simpja/Breakout-Phaser.git"
+  },
+  "keywords": [
+    "socket.io",
+    "game",
+    "phase",
+    "arcade",
+    "breakout"
+  ],
+  "author": "simpja",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/simpja/Breakout-Phaser/issues"
+  },
+  "homepage": "https://github.com/simpja/Breakout-Phaser#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.2.0"
+  }
+}
