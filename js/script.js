@@ -15,6 +15,8 @@ var score = 0;
 var lives = 3;
 var livesText;
 var lifeLostText;
+var cursors;
+var spacebar;
 
 function preload() {
   game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -69,7 +71,7 @@ function create() {
   livesLostText = game.add.text(
     game.world.width / 2,
     game.world.height / 2,
-    "Life lost, click to continue",
+    "Life lost, press space to continue",
     {
       font: "10px Arial",
       fill: "#0095DD"
@@ -77,14 +79,28 @@ function create() {
   );
   livesLostText.anchor.set(1, 0);
   livesLostText.visible = false;
+
+  // Adding arrow key movement
+  cursors = game.input.keyboard.createCursorKeys();
+  spacebar = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+  enter = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
 }
 
 function update() {
   game.physics.arcade.collide(ball, paddle);
   game.physics.arcade.collide(ball, bricks, ballHitBrick);
-  paddle.x = game.input.x || game.world.width / 2;
+  //paddle.x = game.input.x || game.world.width / 2;
   // update the position of the paddle to the input x value. If th input x value
   // does not exists, it will set it to the middle.
+
+  if (cursors.left.isDown && paddle.x > paddle.width / 2) {
+    paddle.x -= 5;
+  } else if (
+    cursors.right.isDown &&
+    paddle.x < game.world.width - paddle.width / 2
+  ) {
+    paddle.x += 5;
+  }
 }
 
 function ballHitBrick(ball, brick) {
@@ -111,7 +127,8 @@ function ballLeaveScreen() {
     livesLostText.visible = true;
     ball.reset(game.world.width / 2, game.world.height - 45);
     paddle.reset(game.world.width / 2, game.world.height);
-    game.input.onDown.addOnce(() => {
+
+    spacebar.onDown.addOnce(() => {
       livesLostText.visible = false;
       ball.body.velocity.set(150, -150);
     }, this);
