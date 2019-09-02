@@ -12,6 +12,15 @@ function handleSocketGameControl(event) {
   }
 }
 
+function setXpos(newX) {
+  // | --===--- |
+  // totoal amount of pixels available
+  const multiplier = (game.world.width - paddle.width) / 100;
+
+  // newX is a number from 0 to 100
+  paddle.x = newX * multiplier + paddle.width / 2;
+}
+
 var game = new Phaser.Game(480, 320, Phaser.CANVAS, null, {
   preload: preload,
   create: create,
@@ -107,6 +116,10 @@ function create() {
 
 socket.on("gameControl", event => {
   handleSocketGameControl(event);
+});
+
+socket.on("set-position", x => {
+  setXpos(x);
 });
 
 function update() {

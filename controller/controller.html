@@ -5,11 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Controller</title>
+    <style>
+      .range {
+        /* -webkit-appearance: none; */
+        /* background: none; */
+        display: block;
+        width: 100%;
+        height: 10px;
+        margin: 20px 0px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        border-radius: 100%;
+        cursor: pointer;
+        position: relative;
+      }
+    </style>
   </head>
   <body>
     <h1>U there?</h1>
-    <button onclick="pressLeft()">Left</button>
-    <button onclick="pressRight()">Right</button>
+    <!-- <button onclick="pressLeft()">Left</button> -->
+    <!-- <button onclick="pressRight()">Right</button> -->
+    <input onchange="return setPosition(event)" class="range" type="range" />
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io(); //instantiate socket
@@ -22,6 +38,10 @@
       function pressRight() {
         console.log("Rightyy clicky");
         socket.emit("control", "right");
+      }
+
+      function setPosition(event) {
+        socket.emit("set-position", event.currentTarget.value);
       }
     </script>
   </body>

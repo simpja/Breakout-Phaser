@@ -23,6 +23,10 @@ io.on("connection", function(socket) {
     console.log(event);
     io.emit("gameControl", event);
   });
+
+  socket.on("set-position", event => {
+    io.emit("set-position", event);
+  });
 });
 /*
 app.get("/controller", function(req, res) {
