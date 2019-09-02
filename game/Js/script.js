@@ -105,21 +105,16 @@ function create() {
   enter = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
 }
 
+socket.on("gameControl", event => {
+  handleSocketGameControl(event);
+});
+
 function update() {
   game.physics.arcade.collide(ball, paddle);
   game.physics.arcade.collide(ball, bricks, ballHitBrick);
   //paddle.x = game.input.x || game.world.width / 2;
   // update the position of the paddle to the input x value. If th input x value
   // does not exists, it will set it to the middle.
-
-  var date = new Date();
-  milliSeconds = date.getTime();
-  if (milliSeconds - lastMilliSeconds > 250) {
-    socket.on("gameControl", event => {
-      handleSocketGameControl(event);
-    });
-    lastMilliSeconds = milliSeconds;
-  }
 
   /*
   if (cursors.left.isDown && paddle.x > paddle.width / 2) {
