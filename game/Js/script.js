@@ -1,3 +1,17 @@
+// Initiate the socket stuff
+var socket = io();
+
+function handleSocketGameControl(event) {
+  if (event == "left" && paddle.x > paddle.width / 2) {
+    paddle.x -= 5;
+  } else if (
+    event == "right" &&
+    paddle.x < game.world.width - paddle.width / 2
+  ) {
+    paddle.x += 5;
+  }
+}
+
 var game = new Phaser.Game(480, 320, Phaser.CANVAS, null, {
   preload: preload,
   create: create,
@@ -17,6 +31,11 @@ var livesText;
 var lifeLostText;
 var cursors;
 var spacebar;
+
+//get time (milliseconds since 1970...)
+var date = new Date();
+var milliSeconds = date.getTime();
+var lastMilliSeconds = 0;
 
 function preload() {
   game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -93,6 +112,16 @@ function update() {
   // update the position of the paddle to the input x value. If th input x value
   // does not exists, it will set it to the middle.
 
+  var date = new Date();
+  milliSeconds = date.getTime();
+  if (milliSeconds - lastMilliSeconds > 250) {
+    socket.on("gameControl", event => {
+      handleSocketGameControl(event);
+    });
+    lastMilliSeconds = milliSeconds;
+  }
+
+  /*
   if (cursors.left.isDown && paddle.x > paddle.width / 2) {
     paddle.x -= 5;
   } else if (
@@ -101,6 +130,7 @@ function update() {
   ) {
     paddle.x += 5;
   }
+  */
 }
 
 function ballHitBrick(ball, brick) {
