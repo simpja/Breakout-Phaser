@@ -11,3 +11,7 @@
 ### ~~4. Make a socket connection between the two~~
 
 ### 5. Tune controllers, adjust the game loop and socket loop
+
+## To do:
+
+- [ ] check this ooooout!
