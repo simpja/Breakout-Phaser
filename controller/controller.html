@@ -25,7 +25,12 @@
     <h1>U there?</h1>
     <!-- <button onclick="pressLeft()">Left</button> -->
     <!-- <button onclick="pressRight()">Right</button> -->
-    <input onchange="return setPosition(event)" class="range" type="range" />
+    <input
+      onchange="return setPosition(event)"
+      value="33"
+      class="range"
+      type="range"
+    />
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io(); //instantiate socket

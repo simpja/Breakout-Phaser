@@ -2,18 +2,20 @@
 
 ## To do in order to play on TV with a device from the couch:
 
-### ~~1. serve script from node scripted server~~
+- [x] ~~1. serve script from node scripted server~~
 
-### ~~2. make controller with arrow keys~~
+- [x] ~~2. make controller with arrow keys~~
 
-### ~~3. Extract the controller to another html file served with the same server script~~
+- [x] ~~3. Extract the controller to another html file served with the same server script~~
 
-### ~~4. Make a socket connection between the two~~
+- [x] ~~4. Make a socket connection between the two~~
 
-### 5. Tune controllers, adjust the game loop and socket loop
+- [x] 5. Tune controllers, adjust the game loop and socket loop
 
-## To do:
+## To do in order to make it a bit more fun:
 
-- [ ] check this ooooout!
+- [ ] Add friction between paddle and ball
 
-- [x] checked this ooooout!
+- [ ] Add bouncing animation to the ball sprite
+
+- [ ] Fix the input controller range. make it reactive.
