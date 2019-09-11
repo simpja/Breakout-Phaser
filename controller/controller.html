@@ -21,12 +21,11 @@
       }
     </style>
   </head>
+
   <body>
-    <h1>U there?</h1>
-    <!-- <button onclick="pressLeft()">Left</button> -->
-    <!-- <button onclick="pressRight()">Right</button> -->
     <input
-      onchange="return setPosition(event)"
+      onchange="setPosition(this.value)"
+      oninput="setPosition(this.value)"
       value="33"
       class="range"
       type="range"
@@ -45,8 +44,8 @@
         socket.emit("control", "right");
       }
 
-      function setPosition(event) {
-        socket.emit("set-position", event.currentTarget.value);
+      function setPosition(value) {
+        socket.emit("set-position", value);
       }
     </script>
   </body>
