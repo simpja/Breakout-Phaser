@@ -1,24 +1,14 @@
 // Initiate the socket stuff
 var socket = io();
 
-function handleSocketGameControl(event) {
-  if (event == "left" && paddle.x > paddle.width / 2) {
-    paddle.x -= 5;
-  } else if (
-    event == "right" &&
-    paddle.x < game.world.width - paddle.width / 2
-  ) {
-    paddle.x += 5;
-  }
-}
-
-function setXpos(newX) {
+function setXpos(paddle, newX) {
+  const paddleWidth = Math.abs(paddle.width);
   // | --===--- |
   // totoal amount of pixels available
-  const multiplier = (game.world.width - paddle.width) / 100;
+  const multiplier = (game.world.width - paddleWidth) / 100;
 
   // newX is a number from 0 to 100
-  paddle.x = newX * multiplier + paddle.width / 2;
+  paddle.x = newX * multiplier + paddleWidth / 2;
 }
 
 var game = new Phaser.Game(480, 320, Phaser.CANVAS, null, {
@@ -29,7 +19,8 @@ var game = new Phaser.Game(480, 320, Phaser.CANVAS, null, {
 
 // Variable decalaration
 var ball;
-var paddle;
+var paddleBottom;
+var paddleTop;
 var bricks;
 var newBrick;
 var brickInfo;
@@ -66,27 +57,38 @@ function create() {
     game.world.height - 45,
     "ball"
   );
-  paddle = game.add.sprite(game.world.width / 2, game.world.height, "paddle");
+  paddleBottom = game.add.sprite(
+    game.world.width / 2,
+    game.world.height,
+    "paddle"
+  );
+  paddleTop = game.add.sprite(game.world.width / 2, 0, "paddle");
   // Adds our images (ball, paddle) into a sprite, an object that we can assign physical properties later
   ball.anchor.set(0.5);
-  paddle.anchor.set(0.5, 1);
+  paddleBottom.anchor.set(0.5, 1);
+  paddleTop.anchor.set(0.5, 1);
   // Defines the Origo of the sprite. when we position the x value of the
   // sprite we now position the middle of the sprite, instead of the default left edge.
   ball.scale.setTo(0.2, 0.2);
-  paddle.scale.setTo(0.7, 0.2);
+  paddleBottom.scale.setTo(0.7, 0.2);
+  paddleTop.scale.setTo(-0.7, -0.2);
   // The image is too big, so we scale it down equally x and y (the two input parameters)
   game.physics.enable(ball, Phaser.Physics.ARCADE);
-  game.physics.enable(paddle, Phaser.Physics.ARCADE);
+
+  game.physics.enable(paddleBottom, Phaser.Physics.ARCADE);
+  game.physics.enable(paddleTop, Phaser.Physics.ARCADE);
 
   ball.body.collideWorldBounds = true;
   ball.body.bounce.set(1);
   ball.body.velocity.set(200, -200);
   game.physics.arcade.checkCollision.down = false;
+  game.physics.arcade.checkCollision.up = false;
   ball.checkWorldBounds = true;
   ball.events.onOutOfBounds.add(ballLeaveScreen, this);
 
-  paddle.body.immovable = true; //Makes the paddle unmovable when colliding with the ball
-  initBricks();
+  paddleBottom.body.immovable = true; //Makes the paddle unmovable when colliding with the ball
+  paddleTop.body.immovable = true; //Makes the paddle unmovable when colliding with the ball
+  // initBricks();
   scoreText = game.add.text(5, 5, "Points: " + score, {
     font: "10px Arial",
     fill: "#0095DD"
@@ -114,16 +116,16 @@ function create() {
   enter = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
 }
 
-socket.on("gameControl", event => {
-  handleSocketGameControl(event);
+socket.on("set-position-bottom", x => {
+  setXpos(paddleBottom, x);
 });
-
-socket.on("set-position", x => {
-  setXpos(x);
+socket.on("set-position-top", x => {
+  setXpos(paddleTop, x);
 });
 
 function update() {
-  game.physics.arcade.collide(ball, paddle);
+  game.physics.arcade.collide(ball, paddleTop);
+  game.physics.arcade.collide(ball, paddleBottom);
   game.physics.arcade.collide(ball, bricks, ballHitBrick);
   //paddle.x = game.input.x || game.world.width / 2;
   // update the position of the paddle to the input x value. If th input x value
@@ -164,7 +166,7 @@ function ballLeaveScreen() {
     livesText.setText("Lives: " + lives);
     livesLostText.visible = true;
     ball.reset(game.world.width / 2, game.world.height - 45);
-    paddle.reset(game.world.width / 2, game.world.height);
+    paddleBottom.reset(game.world.width / 2, game.world.height);
 
     spacebar.onDown.addOnce(() => {
       livesLostText.visible = false;

@@ -11,8 +11,11 @@ app.use("/game/", express.static(__dirname + "/game/")); //serving static files 
 
 //Serve the controllers on localhost:3000/controller/ using static files. but spesicy the html since it is not calles index.html...
 app.use("/controller/", express.static(__dirname + "/controller/"));
-app.get("/controller/*", function(req, res) {
-  res.sendFile(__dirname + "/controller/" + "controller.html");
+app.get("/controllerBottom/*", function(req, res) {
+  res.sendFile(__dirname + "/controller/" + "controllerBottom.html");
+});
+app.get("/controllerTop/*", function(req, res) {
+  res.sendFile(__dirname + "/controller/" + "controllerTop.html");
 });
 
 // Handle socket stuff!
@@ -20,12 +23,17 @@ io.on("connection", function(socket) {
   console.log("someone connected!");
 
   socket.on("control", event => {
-    console.log(event);
+    console.log("skjer dette noen gang??");
     io.emit("gameControl", event);
   });
 
-  socket.on("set-position", event => {
-    io.emit("set-position", event);
+  socket.on("set-position-bottom", event => {
+    io.emit("set-position-bottom", event);
+    //console.log("url" + socket.handshake.url);
+  });
+  socket.on("set-position-top", event => {
+    io.emit("set-position-top", event);
+    //console.log("hei controller 2");
   });
 });
 /*
@@ -35,6 +43,6 @@ app.get("/controller", function(req, res) {
 });
 */
 
-http.listen(port, function() {
+http.listen(port, "10.208.0.161", function() {
   console.log(`listening on: ${port}`);
 });
