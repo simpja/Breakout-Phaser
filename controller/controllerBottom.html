@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Controller</title>
+    <title>Controller Bottom</title>
     <style>
       .range {
         /* -webkit-appearance: none; */
         /* background: none; */
         display: block;
         width: 100%;
-        height: 10px;
+        height: 50vh;
         margin: 20px 0px;
         background-size: contain;
         background-repeat: no-repeat;
@@ -23,6 +23,7 @@
   </head>
 
   <body>
+    <h1>Bottom</h1>
     <input
       onchange="setPosition(this.value)"
       oninput="setPosition(this.value)"
@@ -45,7 +46,7 @@
       }
 
       function setPosition(value) {
-        socket.emit("set-position", value);
+        socket.emit("set-position-bottom", value);
       }
     </script>
   </body>
