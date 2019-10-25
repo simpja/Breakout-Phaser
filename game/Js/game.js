@@ -38,7 +38,7 @@ var milliSeconds = date.getTime();
 var lastMilliSeconds = 0;
 
 function preload() {
-  game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+  //game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
   //Scales the given ratio up or down to fit the available space on the screen
   game.scale.pageAlignHorizontally = true;
   //Aligns the canvas in the middle between top and bottom of the screen
@@ -82,11 +82,15 @@ function create() {
   ball.body.bounce.set(1);
   ball.body.velocity.set(200, -200);
   game.physics.arcade.checkCollision.down = false;
-  game.physics.arcade.checkCollision.up = false;
+  // game.physics.arcade.checkCollision.up = false;
   ball.checkWorldBounds = true;
   ball.events.onOutOfBounds.add(ballLeaveScreen, this);
 
   paddleBottom.body.immovable = true; //Makes the paddle unmovable when colliding with the ball
+
+  //Test av friction
+  paddleBottom.body.friction.x = 1; //Looks good, doesn't work.
+
   paddleTop.body.immovable = true; //Makes the paddle unmovable when colliding with the ball
   // initBricks();
   scoreText = game.add.text(5, 5, "Points: " + score, {
