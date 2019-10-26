@@ -35,16 +35,6 @@
     <script>
       var socket = io(); //instantiate socket
 
-      function pressLeft() {
-        console.log("Lefty clicky");
-        socket.emit("control", "left");
-      }
-
-      function pressRight() {
-        console.log("Rightyy clicky");
-        socket.emit("control", "right");
-      }
-
       function setPosition(value) {
         socket.emit("set-position-bottom", value);
       }

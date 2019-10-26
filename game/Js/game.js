@@ -1,10 +1,10 @@
-// Initiate the socket stuff
+// Initiate socket object
 var socket = io();
 
 function setXpos(paddle, newX) {
   const paddleWidth = Math.abs(paddle.width);
   // | --===--- |
-  // totoal amount of pixels available
+  // total amount of pixels available
   const multiplier = (game.world.width - paddleWidth) / 100;
 
   // newX is a number from 0 to 100
@@ -32,37 +32,32 @@ var lifeLostText;
 var cursors;
 var spacebar;
 
-//get time (milliseconds since 1970...)
-var date = new Date();
-var milliSeconds = date.getTime();
-var lastMilliSeconds = 0;
-
 function preload() {
-  //game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+  //this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
   //Scales the given ratio up or down to fit the available space on the screen
-  game.scale.pageAlignHorizontally = true;
+  this.scale.pageAlignHorizontally = true;
   //Aligns the canvas in the middle between top and bottom of the screen
-  game.scale.pageAlignVertically = true;
+  this.scale.pageAlignVertically = true;
   //The same as over, but in the middle of left and right
-  game.stage.backgroundColor = "#b356a8";
-  game.load.image("ball", "Assets/img/ball.png");
-  game.load.image("paddle", "Assets/img/paddle.png");
-  game.load.image("brick", "Assets/img/brick.png");
+  this.stage.backgroundColor = "#b356a8";
+  this.load.image("ball", "Assets/img/ball.png");
+  this.load.image("paddle", "Assets/img/paddle.png");
+  this.load.image("brick", "Assets/img/brick.png");
 }
 
 function create() {
-  game.physics.startSystem(Phaser.Physics.ARCADE);
-  ball = game.add.sprite(
-    game.world.width * 0.5,
-    game.world.height - 45,
+  this.physics.startSystem(Phaser.Physics.ARCADE);
+  ball = this.add.sprite(
+    this.world.width * 0.5,
+    this.world.height - 45,
     "ball"
   );
-  paddleBottom = game.add.sprite(
-    game.world.width / 2,
-    game.world.height,
+  paddleBottom = this.add.sprite(
+    this.world.width / 2,
+    this.world.height,
     "paddle"
   );
-  paddleTop = game.add.sprite(game.world.width / 2, 0, "paddle");
+  paddleTop = this.add.sprite(this.world.width / 2, 0, "paddle");
   // Adds our images (ball, paddle) into a sprite, an object that we can assign physical properties later
   ball.anchor.set(0.5);
   paddleBottom.anchor.set(0.5, 1);
@@ -73,16 +68,16 @@ function create() {
   paddleBottom.scale.setTo(0.7, 0.2);
   paddleTop.scale.setTo(-0.7, -0.2);
   // The image is too big, so we scale it down equally x and y (the two input parameters)
-  game.physics.enable(ball, Phaser.Physics.ARCADE);
+  this.physics.enable(ball, Phaser.Physics.ARCADE);
 
-  game.physics.enable(paddleBottom, Phaser.Physics.ARCADE);
-  game.physics.enable(paddleTop, Phaser.Physics.ARCADE);
+  this.physics.enable(paddleBottom, Phaser.Physics.ARCADE);
+  this.physics.enable(paddleTop, Phaser.Physics.ARCADE);
 
   ball.body.collideWorldBounds = true;
   ball.body.bounce.set(1);
   ball.body.velocity.set(200, -200);
-  game.physics.arcade.checkCollision.down = false;
-  // game.physics.arcade.checkCollision.up = false;
+  this.physics.arcade.checkCollision.down = false;
+  // this.physics.arcade.checkCollision.up = false;
   ball.checkWorldBounds = true;
   ball.events.onOutOfBounds.add(ballLeaveScreen, this);
 
@@ -93,18 +88,18 @@ function create() {
 
   paddleTop.body.immovable = true; //Makes the paddle unmovable when colliding with the ball
   // initBricks();
-  scoreText = game.add.text(5, 5, "Points: " + score, {
+  scoreText = this.add.text(5, 5, "Points: " + score, {
     font: "10px Arial",
     fill: "#0095DD"
   });
-  livesText = game.add.text(game.world.width - 5, 5, "Lives: " + lives, {
+  livesText = this.add.text(this.world.width - 5, 5, "Lives: " + lives, {
     font: "10px Arial",
     fill: "#0095DD"
   });
   livesText.anchor.set(1, 0);
-  livesLostText = game.add.text(
-    game.world.width / 2,
-    game.world.height / 2,
+  livesLostText = this.add.text(
+    this.world.width / 2,
+    this.world.height / 2,
     "Life lost, press space to continue",
     {
       font: "10px Arial",
@@ -115,9 +110,9 @@ function create() {
   livesLostText.visible = false;
 
   // Adding arrow key movement
-  cursors = game.input.keyboard.createCursorKeys();
-  spacebar = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
-  enter = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
+  cursors = this.input.keyboard.createCursorKeys();
+  spacebar = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+  enter = this.input.keyboard.addKey(Phaser.KeyCode.ENTER);
 }
 
 socket.on("set-position-bottom", x => {
@@ -128,10 +123,10 @@ socket.on("set-position-top", x => {
 });
 
 function update() {
-  game.physics.arcade.collide(ball, paddleTop);
-  game.physics.arcade.collide(ball, paddleBottom);
-  game.physics.arcade.collide(ball, bricks, ballHitBrick);
-  //paddle.x = game.input.x || game.world.width / 2;
+  this.physics.arcade.collide(ball, paddleTop);
+  this.physics.arcade.collide(ball, paddleBottom);
+  this.physics.arcade.collide(ball, bricks, ballHitBrick);
+  //paddle.x = this.input.x || this.world.width / 2;
   // update the position of the paddle to the input x value. If th input x value
   // does not exists, it will set it to the middle.
 
@@ -140,7 +135,7 @@ function update() {
     paddle.x -= 5;
   } else if (
     cursors.right.isDown &&
-    paddle.x < game.world.width - paddle.width / 2
+    paddle.x < this.world.width - paddle.width / 2
   ) {
     paddle.x += 5;
   }
@@ -169,8 +164,8 @@ function ballLeaveScreen() {
   if (lives) {
     livesText.setText("Lives: " + lives);
     livesLostText.visible = true;
-    ball.reset(game.world.width / 2, game.world.height - 45);
-    paddleBottom.reset(game.world.width / 2, game.world.height);
+    ball.reset(this.world.width / 2, this.world.height - 45);
+    paddleBottom.reset(this.world.width / 2, this.world.height);
 
     spacebar.onDown.addOnce(() => {
       livesLostText.visible = false;
@@ -196,16 +191,16 @@ function initBricks() {
     },
     padding: 18
   };
-  bricks = game.add.group();
+  bricks = this.add.group();
   for (c = 0; c < brickInfo.count.col; c++) {
     for (r = 0; r < brickInfo.count.row; r++) {
       var brickX =
         c * (brickInfo.width + brickInfo.padding) + brickInfo.offset.left;
       var brickY =
         r * (brickInfo.height + brickInfo.padding) + brickInfo.offset.top;
-      newBrick = game.add.sprite(brickX, brickY, "brick");
+      newBrick = this.add.sprite(brickX, brickY, "brick");
       newBrick.scale.setTo(0.45, 0.45);
-      game.physics.enable(newBrick, Phaser.Physics.ARCADE);
+      this.physics.enable(newBrick, Phaser.Physics.ARCADE);
       newBrick.body.immovable = true;
       newBrick.anchor.set(0.5);
       bricks.add(newBrick);
