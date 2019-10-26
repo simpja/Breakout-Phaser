@@ -1,16 +1,7 @@
 // Initiate socket object
 var socket = io();
 
-function setXpos(paddle, newX) {
-  const paddleWidth = Math.abs(paddle.width);
-  // | --===--- |
-  // total amount of pixels available
-  const multiplier = (game.world.width - paddleWidth) / 100;
-
-  // newX is a number from 0 to 100
-  paddle.x = newX * multiplier + paddleWidth / 2;
-}
-
+// Initiate phaser game object using HTML Canvas
 var game = new Phaser.Game(480, 320, Phaser.CANVAS, null, {
   preload: preload,
   create: create,
@@ -83,11 +74,11 @@ function create() {
 
   paddleBottom.body.immovable = true; //Makes the paddle unmovable when colliding with the ball
 
-  //Test av friction
-  paddleBottom.body.friction.x = 1; //Looks good, doesn't work.
+  // Test av friction
+  // paddleBottom.body.friction.x = 1; //Looks good, doesn't work.
 
   paddleTop.body.immovable = true; //Makes the paddle unmovable when colliding with the ball
-  // initBricks();
+  
   scoreText = this.add.text(5, 5, "Points: " + score, {
     font: "10px Arial",
     fill: "#0095DD"
@@ -125,38 +116,28 @@ socket.on("set-position-top", x => {
 function update() {
   this.physics.arcade.collide(ball, paddleTop);
   this.physics.arcade.collide(ball, paddleBottom);
-  this.physics.arcade.collide(ball, bricks, ballHitBrick);
-  //paddle.x = this.input.x || this.world.width / 2;
-  // update the position of the paddle to the input x value. If th input x value
-  // does not exists, it will set it to the middle.
 
-  /*
-  if (cursors.left.isDown && paddle.x > paddle.width / 2) {
-    paddle.x -= 5;
+  // Turn on left and right arrow for bottom paddle
+  if (cursors.left.isDown && paddleBottom.x > paddleBottom.width / 2) {
+    paddleBottom.x -= 5;
   } else if (
     cursors.right.isDown &&
-    paddle.x < this.world.width - paddle.width / 2
+    paddleBottom.x < this.world.width - paddleBottom.width / 2
   ) {
-    paddle.x += 5;
+    paddleBottom.x += 5;
   }
-  */
-}
 
-function ballHitBrick(ball, brick) {
-  brick.kill();
-  score += 10;
-  scoreText.setText("Points: " + score);
+};
 
-  var count_alive = 0;
-  for (i = 0; i < bricks.children.length; i++) {
-    if (bricks.children[i].alive == true) {
-      count_alive++;
-    }
-  }
-  if (count_alive == 0) {
-    alert("You won the game maddaffaakakak!");
-    location.reload();
-  }
+// Functions following!
+
+function setXpos(paddle, newX) {
+  const paddleWidth = Math.abs(paddle.width);
+  // | --===--- |
+  // total amount of pixels available
+  const multiplier = (game.world.width - paddleWidth) / 100;
+  // newX is a number from 0 to 100
+  paddle.x = newX * multiplier + paddleWidth / 2;
 }
 
 function ballLeaveScreen() {
@@ -174,36 +155,5 @@ function ballLeaveScreen() {
   } else {
     alert("Game over!");
     location.reload();
-  }
-}
-
-function initBricks() {
-  brickInfo = {
-    width: 50,
-    height: 20,
-    count: {
-      row: 3,
-      col: 7
-    },
-    offset: {
-      top: 30,
-      left: 40
-    },
-    padding: 18
-  };
-  bricks = this.add.group();
-  for (c = 0; c < brickInfo.count.col; c++) {
-    for (r = 0; r < brickInfo.count.row; r++) {
-      var brickX =
-        c * (brickInfo.width + brickInfo.padding) + brickInfo.offset.left;
-      var brickY =
-        r * (brickInfo.height + brickInfo.padding) + brickInfo.offset.top;
-      newBrick = this.add.sprite(brickX, brickY, "brick");
-      newBrick.scale.setTo(0.45, 0.45);
-      this.physics.enable(newBrick, Phaser.Physics.ARCADE);
-      newBrick.body.immovable = true;
-      newBrick.anchor.set(0.5);
-      bricks.add(newBrick);
-    }
   }
 }
