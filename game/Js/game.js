@@ -6,13 +6,23 @@ var config = {
   type: Phaser.AUTO,
   width: 480,
   height: 320,
-  physics: {
-    default: 'arcade',
-  },
   scene: {
     preload: preload,
     create: create,
     update: update
+  },
+  physics: {
+    default: 'arcade',
+    arcade: {
+      // x: 0,
+      // y: 0,
+      // width: scene.sys.scale.width,
+      // height: scene.sys.scale.height,
+      gravity: {
+        x: 0,
+        y: 0
+      }
+    }
   }
 };
 
@@ -20,6 +30,7 @@ var config = {
 var game = new Phaser.Game(config);
 
 // Variable decalaration
+var bounds;
 var ball;
 var paddleBottom;
 var paddleTop;
@@ -35,30 +46,31 @@ var cursors;
 var spacebar;
 
 function preload() {
-  this.scale.pageAlignHorizontally = true;
+  // this.scale.pageAlignHorizontally = true;
   //Aligns the canvas in the middle between top and bottom of the screen
-  this.scale.pageAlignVertically = true;
+  // this.scale.pageAlignVertically = true;
   //The same as over, but in the middle of left and right
   this.load.image("ball", "Assets/img/ball.png");
   this.load.image("paddle", "Assets/img/paddle.png");
   this.load.image("brick", "Assets/img/brick.png");
   this.load.image("background", "Assets/img/starsBackground.jpg")
+  console.log(game.config.width);
 }
 
 function create() {
   this.add.image(0, 0, 'background').setOrigin(0, 0);
   //this.physics.startSystem(Phaser.Physics.ARCADE);
   ball = this.physics.add.sprite(
-    this.scene.width * 0.5, //was this.world.widht * 0.5;
-    this.scene.height - 45,
+    game.config.width * 0.5, //was this.world.widht * 0.5;
+    game.config.height - 45,
     "ball"
   );
   paddleBottom = this.physics.add.sprite(
-    this.scene.width / 2,
-    this.scene.height,
+    game.config.width / 2,
+    game.config.height,
     "paddle"
   );
-  paddleTop = this.physics.add.sprite(this.scene.width / 2, 0, "paddle");
+  paddleTop = this.physics.add.sprite(game.config.width / 2, 0, "paddle");
   // Adds our images (ball, paddle) into a sprite, an object that we can assign physical properties later
   ball.setOrigin(0, 0.5);
   paddleBottom.setOrigin(0.5, 1);
@@ -70,13 +82,23 @@ function create() {
   paddleTop.setScale(-0.7, -0.2);
   // The image is too big, so we scale it down equally x and y (the two input parameters)
 
-  ball.body.collideWorldBounds = true;
+  ball.body.setCollideWorldBounds(true);
+  this.physics.world.checkCollision.down = false;
   ball.setBounce(1);
   ball.body.velocity.set(200, -200);
-  this.physics.arcade.checkCollision.down = false;
-  // this.physics.arcade.checkCollision.up = false;
-  ball.checkWorldBounds = true;
-  ball.events.onOutOfBounds.add(ballLeaveScreen, this);
+
+ 
+
+  // logic for executing function when ball leaves screen
+  // Old solution that doesn't work anymore...
+   // ball.checkWorldBounds = true;
+  //ball.events.onOutOfBounds.add(ballLeaveScreen, this);
+
+  // new solution!
+  //var bounds = this.physics.world.bounds.width;
+  bounds = this.physics.world.bounds;
+  
+//  var spriteBounds = Phaser.Geom.Rectangle.Inflate(Phaser.Geom.Rectangle.Clone(this.physics.world.bounds), -20, -20);
 
   paddleBottom.body.immovable = true; //Makes the paddle unmovable when colliding with the ball
 
@@ -89,14 +111,14 @@ function create() {
     font: "10px Arial",
     fill: "#0095DD"
   });
-  livesText = this.add.text(this.scene.width - 5, 5, "Lives: " + lives, {
+  livesText = this.add.text(game.config.width - 5, 5, "Lives: " + lives, {
     font: "10px Arial",
     fill: "#0095DD"
   });
   livesText.setOrigin(1, 0);
   livesLostText = this.add.text(
-    this.scene.width / 2,
-    this.scene.height / 2,
+    game.config.width / 2,
+    game.config.height / 2,
     "Life lost, press space to continue",
     {
       font: "10px Arial",
@@ -108,9 +130,9 @@ function create() {
 
   // Adding arrow key movement
   cursors = this.input.keyboard.createCursorKeys();
-  spacebar = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
-  enter = this.input.keyboard.addKey(Phaser.KeyCode.ENTER);
-}
+  //spacebar = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+  //enter = this.input.keyboard.addKey(Phaser.KeyCode.ENTER);
+};
 
 socket.on("set-position-bottom", x => {
   setXpos(paddleBottom, x);
@@ -128,10 +150,28 @@ function update() {
     paddleBottom.x -= 5;
   } else if (
     cursors.right.isDown &&
-    paddleBottom.x < this.scene.width - paddleBottom.width / 2
+    paddleBottom.x < game.config.width - paddleBottom.width / 2
   ) {
     paddleBottom.x += 5;
   }
+
+  // Check if ball is out of bounds 
+  
+  /*
+      // Get all physics bodies within the physics rectangle (same as the camera rectangle for this scene.)
+      var within = this.physics.overlapRect(bounds.x, bounds.y, bounds.width, bounds.height);
+  
+      within.forEach(function (body) {
+          body.gameObject.setTint(0xff0000);
+          console.log(body)
+      });
+      
+*/
+      if (Phaser.Geom.Rectangle.Overlaps(bounds, ball.getBounds()) != true){
+        ballLeaveScreen();
+      }
+    
+     //console.log(Phaser.Geom.Rectangle.Overlaps(bounds, ball.getBounds()))
 
 };
 
@@ -141,23 +181,24 @@ function setXpos(paddle, newX) {
   const paddleWidth = Math.abs(paddle.width);
   // | --===--- |
   // total amount of pixels available
-  const multiplier = (game.world.width - paddleWidth) / 100;
+  const multiplier = (game.scene.width - paddleWidth) / 100;
   // newX is a number from 0 to 100
   paddle.x = newX * multiplier + paddleWidth / 2;
 }
 
 function ballLeaveScreen() {
   lives--;
+  console.log('hi');
   if (lives) {
     livesText.setText("Lives: " + lives);
     livesLostText.visible = true;
-    ball.reset(this.scene.width / 2, this.scene.height - 45);
-    paddleBottom.reset(this.scene.width / 2, this.scene.height);
+    ball.reset(game.config.width / 2, game.config.height - 45);
+    paddleBottom.reset(game.config.width / 2, game.config.height);
 
-    spacebar.onDown.addOnce(() => {
+    if (cursors.space.isDown) {
       livesLostText.visible = false;
       ball.body.velocity.set(150, -150);
-    }, this);
+    };
   } else {
     alert("Game over!");
     location.reload();
