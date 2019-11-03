@@ -28,6 +28,7 @@ var game = new Phaser.Game(config);
 // Variable decalaration
 var bounds;
 var ballIsOut;
+var bottomFence;
 var ball;
 var paddleBottom;
 var paddleTop;
@@ -50,20 +51,49 @@ function preload() {
   this.load.image("ball", "Assets/img/ball.png");
   this.load.image("paddle", "Assets/img/paddle.png");
   this.load.image("brick", "Assets/img/brick.png");
-  this.load.image("background", "Assets/img/starsBackground.jpg")
+  this.load.image("background", "Assets/img/starsBackground.jpg");
+  this.load.image("fence", "Assets/img/fence.png");
 }
 
 function create() {
   //Add image as background
-  this.add.image(0, 0, 'background').setOrigin(0, 0);
+  this.add.image(0, 0, 'background').setOrigin(0, 0);  
+
   
+  // Add sprite to live along and underneath the game screen. Call it the fence
+  
+  bottomFence = this.physics.add.sprite(
+    game.config.height-5,
+    game.config.width,
+    "fence"
+  );
+  
+ var ball = new Ball(this);
+  bottomFence.body.immovable = true; 
+  console.log('sprites:');
+  console.log(bottomFence);
+  console.log(ball);
+
+  //bottomFence.fillStyle(0xffff00, 1);
+  //bottomFence.fillRoundedRect(0, game.config.height-5, game.config.width, 5, 0);
+  //this.physics.add.existing(bottomFence);
+  //bottomFence.body.setSize(5, game.config.width);
+
+  // bottomFence.body.velocity.x = 0;
+  // bottomFence.body.velocity.y = 0;
+  //bottomFence.body.bounce.x = 1;
+  //bottomFence.body.bounce.y = 1;
+  // bottomFence.body.collideWorldBounds = true;
+
   // Add our images (ball, paddles) as sprites, objects that we can assign physical properties and animation. 
   // sprites live in the scope of the scene
+  /*
   ball = this.physics.add.sprite(
-    game.config.width * 0.5, //was this.world.widht * 0.5;
-    game.config.height - 45,
+    game.config.width * 0.5, //was this.world.width * 0.5;
+    game.config.height - 75,
     "ball"
   );
+  */
   paddleBottom = this.physics.add.sprite(
     game.config.width / 2,
     game.config.height,
@@ -73,26 +103,26 @@ function create() {
 
   // Define the Origo of the sprite. 
   // when we position the x value of the sprite we now position the middle of the sprite, instead of the default left edge as in phaser 2.
-  ball.setOrigin(0, 0.5);
+  //  ball.setOrigin(0, 0.5);
   paddleBottom.setOrigin(0.5, 1);
   paddleTop.setOrigin(0.5, 1);
 
   // Adjust the scales of the sprites so that they fit relative to each other. 
   // We scale them down in x and y direction respectively (the two input parameters)
-  ball.setScale(0.2, 0.2);
+  //  ball.setScale(0.2, 0.2);
   paddleBottom.setScale(0.7, 0.2);
   paddleTop.setScale(-0.7, -0.2);
 
   // Make ball collide with the bounds of the world.
-  ball.body.setCollideWorldBounds(true);
+  //ball.body.setCollideWorldBounds(true);
   // But we don't want it to collide with the bottom!
   this.physics.world.checkCollision.down = false;
   // save bounds for checking when ball leaves screen in update function later in the script
   bounds = this.physics.world.bounds;
   // Let's make the ball bounce with zero loss - all energy is saved througout the collision.
-  ball.setBounce(1);
+  //  ball.setBounce(1);
   // And give the ball an initial speed and direction.
-  ball.body.velocity.set(200, -200);
+  //  ball.body.velocity.set(200, -200);
   
   //Make the paddle unmovable when colliding with the ball
   paddleBottom.body.immovable = true; 
@@ -128,6 +158,8 @@ function create() {
 
   // we have a boolean that tells us if the ball is out of bounds
   ballIsOut = false;
+
+
 };
 
 // Outside the functions we make these socket-connections that adjust the paddle positions when a user of the controllers emit an event.
@@ -141,6 +173,10 @@ socket.on("set-position-top", x => {
 function update() {
   this.physics.add.collider(ball, paddleTop);
   this.physics.add.collider(ball, paddleBottom);
+  //var listener = this.physics.world.on('overlap', listener);
+  this.physics.add.overlap(ball, bottomFence, ballLeaveScreen, null, this);
+
+//this.events.once('listener', ballLeaveScreen, this);
 
   // Turn on left and right arrow for bottom paddle
   if (cursors.left.isDown && paddleBottom.x > paddleBottom.width / 2) {
@@ -150,16 +186,34 @@ function update() {
     paddleBottom.x < game.config.width - paddleBottom.width / 2
   ) {
     paddleBottom.x += 5;
+  };
+
+  if (cursors.space.isDown) {
+    ball.x = game.config.width / 2;
+    ball.y = game.config.height / 2;
   }
 
 
+
+/* Method 1 
+  //Try to catch the event that the ball exits the screen 
   // Check if ball is out of bounds 
   // Need to only run the ballLeaveScreen() function once!!!!
   if (Phaser.Geom.Rectangle.Overlaps(bounds, ball.getBounds()) != true){
     // this.physics.pause(); // might use this when resetting the ball
+    ball.disableBody(false, false);
     ballLeaveScreen();
   };
+*/
+
 };
+
+
+
+/* Method 2
+Make a sprite that lives along and underneath 
+the screen and run the function when ball collides with this
+*/
 
 // Functions following!
 
@@ -175,28 +229,32 @@ function setXpos(paddle, newX) {
 function ballLeaveScreen() {
   //if (ballIsOut) return;
   //this.physics.pause();
-  lives--;
   ball.disableBody(true, true);
+  lives--;
   console.log('hi ballLeave');
   if (lives) {
     livesText.setText("Lives: " + lives);
     livesLostText.visible = true;
-    ball.x = game.scene.width / 2;
-    ball.y = game.scene.height / 2;
+    ball.x = game.config.width / 2;
+    ball.y = game.config.height / 2;
+    ball.disableBody(false, false);
     // ball.reset(game.config.width / 2, game.config.height - 45);
     ballIsOut = false;
+    console.log('hi ballLeave lives');
     
     //paddleBottom.reset(game.config.width / 2, game.config.height);
-
+    
     if (cursors.space.isDown) {
       livesLostText.visible = false;
       ball.body.velocity.set(150, -150);
+      console.log('hi space');
+
     };
   } else {
     alert("Game over!");
     location.reload();
   }
-}
+};
 
 // Returns a function, that, as long as it continues to be invoked, will not
 // be triggered. The function will be called after it stops being called for
