@@ -10,11 +10,13 @@
       }
     </style>
     <script src="External/phaser.min.js"></script>
-  </head>
-  <body>
     <script src="/socket.io/socket.io.js"></script>
     <script src="Js/game.js"></script>
+  </head>
+  <body>
     
+    
+    <!--
       <h1>Bottom</h1>
       <input
         onchange="setPosition(this.value)"
@@ -23,6 +25,7 @@
         class="range"
         type="range"
       />
+      -->
       
       <script>
         var socket = io(); //instantiate socket
@@ -31,5 +34,8 @@
           socket.emit("set-position-bottom", value);
         }
       </script>
+
   </body>
+
+
 </html>
