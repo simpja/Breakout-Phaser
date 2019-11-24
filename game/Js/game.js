@@ -142,8 +142,8 @@ function create() {
   // we have a boolean that tells us if the ball is out of bounds
   ballIsOut = false;
   gameStatus = "running";
-  this.physics.add.collider(ball, paddleTop);
-  this.physics.add.collider(ball, paddleBottom);
+  this.physics.add.collider(ball, paddleTop, strikeBall, null, this);
+  this.physics.add.collider(ball, paddleBottom, strikeBall, null, this);
   this.physics.add.overlap(ball, bottomFence, ballLeaveScreen, null, this);
 }
 
@@ -194,6 +194,15 @@ function setXpos(paddle, newX) {
   const multiplier = (game.config.width - paddleWidth) / 100;
   // newX is a number from 0 to 100
   paddle.x = newX * multiplier + paddleWidth / 2;
+}
+
+function strikeBall(ball, paddle) {
+  // This function should trigger every time a paddle hits the ball.
+  // We can add a small velocity incrementation and friction
+  // ball speed X = ball speed X + (paddle pos x - paddle prev pos x) * frictionFactor
+  // ball.body.setVelocityX(200);
+  // TO DO
+  //Need to get the velocity of the ball...
 }
 
 function ballLeaveScreen() {
