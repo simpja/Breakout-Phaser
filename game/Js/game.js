@@ -27,6 +27,8 @@ var game = new Phaser.Game(config);
 
 // Variable decalaration
 var bounds;
+var frictionFactor = 4; // hehe, fakk physics
+var paddleMoveStep = 5;
 var gameStatus = "start";
 var ballIsOut;
 var bottomFence;
@@ -43,6 +45,14 @@ var livesText;
 var lifeLostText;
 var cursors;
 var spacebar;
+var paddlePrevBottom = {
+  x: 1,
+  y: 1
+};
+var paddlePrevTop = {
+  x: 1,
+  y: 1
+};
 
 function preload() {
   // this.scale.pageAlignHorizontally = true;
@@ -169,14 +179,19 @@ function update() {
     ball.body.velocity.set(150, -150);
     gameStatus = "running";
   }
+
+  // Save current positions of paddles in order to simulate friction
+  paddlePrevBottom.x = paddleBottom.x;
+  paddlePrevTop.x = paddleTop.x;
+
   // Turn on left and right arrow for bottom paddle
   if (cursors.left.isDown && paddleBottom.x > paddleBottom.width / 2) {
-    paddleBottom.x -= 5;
+    paddleBottom.x -= paddleMoveStep;
   } else if (
     cursors.right.isDown &&
     paddleBottom.x < game.config.width - paddleBottom.width / 2
   ) {
-    paddleBottom.x += 5;
+    paddleBottom.x += paddleMoveStep;
   }
 }
 
@@ -200,9 +215,16 @@ function strikeBall(ball, paddle) {
   // This function should trigger every time a paddle hits the ball.
   // We can add a small velocity incrementation and friction
   // ball speed X = ball speed X + (paddle pos x - paddle prev pos x) * frictionFactor
-  // ball.body.setVelocityX(200);
-  // TO DO
-  //Need to get the velocity of the ball...
+  if (ball.y > 200) {
+    // Only run this function on paddleBottom..
+    ball.body.setVelocityX(
+      ball.body.velocity.x + frictionFactor * (paddle.x - paddlePrevBottom.x)
+    );
+
+    // TO DO
+    // console.log(ball.body.velocity.x);
+    console.log("paddleSpeed: ", paddle.x - paddlePrevBottom.x);
+  }
 }
 
 function ballLeaveScreen() {
