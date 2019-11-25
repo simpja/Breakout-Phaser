@@ -27,10 +27,9 @@ var game = new Phaser.Game(config);
 
 // Variable decalaration
 var bounds;
-var frictionFactor = 4; // hehe, fakk physics
+var frictionFactor = 20; // hehe, fakk physics.
 var paddleMoveStep = 5;
 var gameStatus = "start";
-var ballIsOut;
 var bottomFence;
 var ball;
 var paddleBottom;
@@ -55,9 +54,9 @@ var paddlePrevTop = {
 };
 
 function preload() {
-  // this.scale.pageAlignHorizontally = true;
+  //this.scale.pageAlignHorizontally = true;
   //Aligns the canvas in the middle between top and bottom of the screen
-  // this.scale.pageAlignVertically = true;
+  //this.scale.pageAlignVertically = true;
   //The same as over, but in the middle of left and right
   this.load.image("ball", "Assets/img/ball.png");
   this.load.image("paddle", "Assets/img/paddle.png");
@@ -121,9 +120,6 @@ function create() {
   paddleBottom.body.immovable = true;
   paddleTop.body.immovable = true;
 
-  // Test av friction
-  // paddleBottom.body.friction.x = 1; //Looks good, doesn't work.
-
   // Make the text objects to write lives remaining and score in.
   scoreText = this.add.text(5, 5, "Points: " + score, {
     font: "10px Arial",
@@ -149,8 +145,6 @@ function create() {
   // Adding arrow key + shift + spacebar listener as one common cursors-object
   cursors = this.input.keyboard.createCursorKeys();
 
-  // we have a boolean that tells us if the ball is out of bounds
-  ballIsOut = false;
   gameStatus = "running";
   this.physics.add.collider(ball, paddleTop, strikeBall, null, this);
   this.physics.add.collider(ball, paddleBottom, strikeBall, null, this);
@@ -213,34 +207,24 @@ function setXpos(paddle, newX) {
 
 function strikeBall(ball, paddle) {
   // This function should trigger every time a paddle hits the ball.
-  // We can add a small velocity incrementation and friction
-  // ball speed X = ball speed X + (paddle pos x - paddle prev pos x) * frictionFactor
+  // We can add a small velocity incrementation later if desired
+  // Friction makes the velocity of the paddle adjust the velocity of the ball
+
+  // Currently only run this function on paddleBottom..
   if (ball.y > 200) {
-    // Only run this function on paddleBottom..
     ball.body.setVelocityX(
       ball.body.velocity.x + frictionFactor * (paddle.x - paddlePrevBottom.x)
     );
-
-    // TO DO
-    // console.log(ball.body.velocity.x);
-    console.log("paddleSpeed: ", paddle.x - paddlePrevBottom.x);
   }
 }
 
 function ballLeaveScreen() {
-  //if (ballIsOut) return;
-  //this.physics.pause();
   gameStatus = "paused";
   ball.disableBody(true, false);
   lives--;
   if (lives) {
     livesText.setText("Lives: " + lives);
     livesLostText.visible = true;
-    ball.enableB;
-    // ball.reset(game.config.width / 2, game.config.height - 45);
-    ballIsOut = false;
-
-    //paddleBottom.reset(game.config.width / 2, game.config.height);
   } else {
     alert("Game over!");
     location.reload();
