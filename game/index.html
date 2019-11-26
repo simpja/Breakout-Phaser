@@ -9,33 +9,9 @@
         margin: 0;
       }
     </style>
-    <script src="External/phaser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.19.0/phaser-arcade-physics.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="Js/game.js"></script>
   </head>
-  <body>
-    
-    
-    <!--
-      <h1>Bottom</h1>
-      <input
-        onchange="setPosition(this.value)"
-        oninput="setPosition(this.value)"
-        value="33"
-        class="range"
-        type="range"
-      />
-      -->
-      
-      <script>
-        var socket = io(); //instantiate socket
-  
-        function setPosition(value) {
-          socket.emit("set-position-bottom", value);
-        }
-      </script>
-
-  </body>
-
-
+  <body></body>
 </html>
