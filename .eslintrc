@@ -1,0 +1,10 @@
+{
+  "env": {
+    "browser": true
+  },
+  "parser": "babel-eslint",
+  "extends": [
+    "@otovo/eslint-config-otovo/javascript",
+    "@otovo/eslint-config-otovo/prettier"
+  ]
+}

@@ -6,7 +6,8 @@
   "scripts": {
     "test": "test",
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "eslint": "eslint . --cache"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,14 @@
     "socket.io": "^2.2.0"
   },
   "devDependencies": {
+    "@otovo/eslint-config-otovo": "^3.0.0",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.7.1",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
     "nodemon": "^1.19.2",
     "prettier": "^1.19.1"
   }
