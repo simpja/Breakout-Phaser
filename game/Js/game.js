@@ -37,11 +37,10 @@ var paddleTop;
 var bricks;
 var newBrick;
 var brickInfo;
-var scoreText;
 var score = 0;
 var lives = 3;
-var livesText;
-var lifeLostText;
+let livesText;
+let livesLostText;
 var cursors;
 var spacebar;
 var paddlePrevBottom = {
@@ -68,6 +67,8 @@ function preload() {
 function create() {
   //Add image as background
   this.add.image(0, 0, "background").setOrigin(0, 0);
+
+  createHud(this);
 
   // Add sprite to live along and underneath the game screen. Call it the fence
 
@@ -120,28 +121,6 @@ function create() {
   paddleBottom.body.immovable = true;
   paddleTop.body.immovable = true;
 
-  // Make the text objects to write lives remaining and score in.
-  scoreText = this.add.text(5, 5, "Points: " + score, {
-    font: "10px Arial",
-    fill: "#0095DD"
-  });
-  livesText = this.add.text(game.config.width - 5, 5, "Lives: " + lives, {
-    font: "10px Arial",
-    fill: "#0095DD"
-  });
-  livesText.setOrigin(1, 0);
-  livesLostText = this.add.text(
-    game.config.width / 2,
-    game.config.height / 2,
-    "Life lost, press space to continue",
-    {
-      font: "10px Arial",
-      fill: "#0095DD"
-    }
-  );
-  livesLostText.setOrigin(1, 0);
-  livesLostText.visible = false;
-
   // Adding arrow key + shift + spacebar listener as one common cursors-object
   cursors = this.input.keyboard.createCursorKeys();
 
@@ -189,12 +168,31 @@ function update() {
   }
 }
 
-/* Method 2
-Make a sprite that lives along and underneath 
-the screen and run the function when ball collides with this
-*/
-
 // Functions following!
+
+function createHud(scene) {
+  // Make the text objects to write lives remaining and score in.
+  const scoreText = scene.add.text(5, 5, "Points: " + score, {
+    font: "10px Arial",
+    fill: "#0095DD"
+  });
+  livesText = scene.add.text(game.config.width - 5, 5, "Lives: " + lives, {
+    font: "10px Arial",
+    fill: "#0095DD"
+  });
+  livesText.setOrigin(1, 0);
+  livesLostText = scene.add.text(
+    game.config.width / 2,
+    game.config.height / 2,
+    "Life lost, press space to continue",
+    {
+      font: "10px Arial",
+      fill: "#0095DD"
+    }
+  );
+  livesLostText.setOrigin(1, 0);
+  livesLostText.visible = false;
+}
 
 function setXpos(paddle, newX) {
   const paddleWidth = Math.abs(paddle.width);
