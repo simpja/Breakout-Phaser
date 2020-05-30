@@ -9,17 +9,17 @@ var config = {
   scene: {
     preload: preload,
     create: create,
-    update: update
+    update: update,
   },
   physics: {
     default: "arcade",
     arcade: {
       gravity: {
         x: 0,
-        y: 0
-      }
-    }
-  }
+        y: 0,
+      },
+    },
+  },
 };
 
 // Initiate phaser game object using HTML Canvas
@@ -28,7 +28,7 @@ var game = new Phaser.Game(config);
 // Variable decalaration
 var bounds;
 var frictionFactor = 20; // hehe, fakk physics.
-var paddleMoveStep = 5;
+var paddleMoveStep = 10;
 var gameStatus = "start";
 var bottomFence;
 var ball;
@@ -45,11 +45,11 @@ var cursors;
 var spacebar;
 var paddlePrevBottom = {
   x: 1,
-  y: 1
+  y: 1,
 };
 var paddlePrevTop = {
   x: 1,
-  y: 1
+  y: 1,
 };
 
 function preload() {
@@ -131,10 +131,10 @@ function create() {
 }
 
 // Outside the functions we make these socket-connections that adjust the paddle positions when a user of the controllers emit an event.
-socket.on("set-position-bottom", x => {
+socket.on("set-position-bottom", (x) => {
   setXpos(paddleBottom, x);
 });
-socket.on("set-position-top", x => {
+socket.on("set-position-top", (x) => {
   setXpos(paddleTop, x);
 });
 
@@ -174,11 +174,11 @@ function createHud(scene) {
   // Make the text objects to write lives remaining and score in.
   const scoreText = scene.add.text(5, 5, "Points: " + score, {
     font: "10px Arial",
-    fill: "#0095DD"
+    fill: "#0095DD",
   });
   livesText = scene.add.text(game.config.width - 5, 5, "Lives: " + lives, {
     font: "10px Arial",
-    fill: "#0095DD"
+    fill: "#0095DD",
   });
   livesText.setOrigin(1, 0);
   livesLostText = scene.add.text(
@@ -187,7 +187,7 @@ function createHud(scene) {
     "Life lost, press space to continue",
     {
       font: "10px Arial",
-      fill: "#0095DD"
+      fill: "#0095DD",
     }
   );
   livesLostText.setOrigin(1, 0);
