@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Breakout Phaser</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <header id="header">
+      <h1>The Breakout Multiplayer Game</h1>
+    </header>
+    <main class="main">
+      <h1>Instructions</h1>
+      
+
+      <h2 class="sub-header"> What is it? </h2>
+
+<h3> Using a local webserver you can easily create an instance of the classic Breakout game and use other devices as controllers!</h3>
+
+      <h2 class="sub-header">How do you do it?</h2>
+      <ol>
+        <li> Clone or download the repository </li>
+        <li> Install Node.js if you don't already have it </li>
+        <li> Navigate to the root folder using a terminal </li>
+        <li> Run `ipconfig` and copy your IPv4 address under wireless LAN adapter Wi-Fi. This is your local server IP<li>address. Let's name this parameter localServerIP </li>
+        <li> Run `node server` to start the server on localhost </li>
+        <li> Using the unit you want to present the screen from, navigate to _localServerIP:3000/home/_ in your browser and choose **Be the Game Screen** </li>
+        <li> Using the unit for the first controller navigate to the same page but choose **Be Player One** </li>
+        <li> Repeat for the second user, but choose to be player two instead. </li>
+        <li> Play! </li>
+      </ol>
+      <h2 class="sub-header">How does it work?</h2>
+      <p>A **node.js** script (server.js) uses the **express** library to create a local web server from your machine.</br>
+      Websites created on this server will be available for devices on the same Wi-Fi using the ip address of your unit on the network and the port defined in the server script.</br>
+      Using **socket.io**, web socket connections are created between clients using the website hosted from the server, and the server itself.</br>
+      These sockets are created so that designated controller sub-pages on the website will emit events through the socket connection if the value of a slider is changed.</br>
+      The server takes these values and updates the player objects on the game screen through another socket.
+      </p>
+
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>

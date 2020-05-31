@@ -1,3 +1,11 @@
+var header = document.getElementById("header");
+header.addEventListener("click", clickHeader);
+
+function clickHeader() {
+  console.log(window.location);
+  window.location = "../home/";
+}
+
 function gameNavigateClick(player) {
   switch (player) {
     case "game":
@@ -11,7 +19,9 @@ function gameNavigateClick(player) {
     case "two":
       // Redirect user to controller top
       window.location = "../controllerTop/";
-      console.log("That's the wrong!");
+      break;
+    case "instructions":
+      window.location = "../instructions/";
       break;
   }
 }

@@ -4,10 +4,12 @@ const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const port = 3000;
 
-// The homepage!
+// The homepage
 app.use("/home/", express.static(__dirname + "/home/"));
 // Serve the game at localhost:3000/game/ using express static files.
 app.use("/game/", express.static(__dirname + "/game/"));
+// The instructions page
+app.use("/instructions/", express.static(__dirname + "/instructions/"));
 
 // Serve the controllers at localhost:[port]/controllerTop/ and localhost:[port]/controllerBottom/ using static files. Spesifying the html-file since it is not called index.html.
 app.use("/controller/", express.static(__dirname + "/controller/"));

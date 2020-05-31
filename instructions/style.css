@@ -25,7 +25,7 @@ header > h1:hover {
   background-color: var(--main-color-yellow);
   padding: 20px;
   width: 100%;
-  text-align: center;
+  text-align: left;
 }
 
 .list-alternatives {
@@ -45,7 +45,7 @@ header > h1:hover {
   border-radius: 10px;
   color: white; /* White text */
   padding: 40px 60px; /* Some padding */
-  cursor: pointer;
+  cursor: not-allowed; /* pointer */
   float: none;
   font-size: large;
   box-shadow: 0 10px #999;
