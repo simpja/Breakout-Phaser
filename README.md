@@ -1,21 +1,25 @@
 # Breakout-Phaser
 
-## To do in order to play on TV with a device from the couch:
+## What is it?
 
-- [x] 1. serve script from node scripted server
+### Using a local webserver you can easily create an instance of the classic Breakout game and use other devices as controllers!
 
-- [x] 2. make controller with arrow keys
+## How do you do it?
 
-- [x] 3. Extract the controller to another html file served with the same server script
+- Clone or download the repository
+- Install Node.js if you don't already have it
+- Navigate to the root folder using a terminal
+- Run `ipconfig` and copy your IPv4 address under wireless LAN adapter Wi-Fi. This is your local server IP-address. Let's name this parameter localServerIP
+- Run `node server` to start the server on localhost
+- Using the unit you want to present the screen from, navigate to _localServerIP:3000/home/_ in your browser and choose **Be the Game Screen**
+- Using the unit for the first controller navigate to the same page but choose **Be Player One**
+- Repeat for the second user, but choose to be player two instead.
+- Play!
 
-- [x] 4. Make a socket connection between the two
+## How does it work?
 
-- [x] 5. Tune controllers, adjust the game loop and socket loop
-
-## To do in order to make it a bit more fun:
-
-- [ ] Add friction between paddle and ball
-
-- [ ] Add bouncing animation to the ball sprite
-
-- [ ] Fix the input controller range. make it reactive.
+A **node.js** script (server.js) uses the **express** library to create a local web server from your machine.</br>
+Websites created on this server will be available for devices on the same Wi-Fi using the ip address of your unit on the network and the port defined in the server script.</br>
+Using **socket.io**, web socket connections are created between clients using the website hosted from the server, and the server itself.</br>
+These sockets are created so that designated controller sub-pages on the website will emit events through the socket connection if the value of a slider is changed.</br>
+The server takes these values and updates the player objects on the game screen through another socket.
