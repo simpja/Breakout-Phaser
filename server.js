@@ -4,6 +4,8 @@ const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const port = 3000;
 
+// The homepage!
+app.use("/home/", express.static(__dirname + "/home/"));
 // Serve the game at localhost:3000/game/ using express static files.
 app.use("/game/", express.static(__dirname + "/game/"));
 
@@ -20,17 +22,16 @@ app.get("/controllerTop/*", function(req, res) {
 io.on("connection", function(socket) {
   console.log("someone connected!");
 
-  socket.on("set-position-bottom", event => {
+  socket.on("set-position-bottom", (event) => {
     io.emit("set-position-bottom", event);
     // console.log("url" + socket.handshake.url);
   });
 
-  socket.on("set-position-top", event => {
+  socket.on("set-position-top", (event) => {
     io.emit("set-position-top", event);
     // console.log("hei controller 2");
   });
 });
-
 
 http.listen(port, function() {
   console.log(`listening on: ${port}`);
