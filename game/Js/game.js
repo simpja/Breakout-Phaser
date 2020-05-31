@@ -4,8 +4,8 @@ var socket = io();
 // Define a config object for Phaser3
 var config = {
   type: Phaser.AUTO,
-  width: 480,
-  height: 320,
+  width: 590, // 480
+  height: 322, // 320
   scene: {
     preload: preload,
     create: create,

@@ -1,0 +1,66 @@
+:root {
+  --main-color-purple: #6b5b95;
+  --main-color-yellow: #feb236;
+  --main-color-red: #d64161;
+  --main-color-orange: #ff7b25;
+  --main-color-milk: #fefbd8;
+}
+
+body {
+  width: 90%;
+}
+
+#header {
+  background-color: var(--main-color-yellow);
+  text-align: center;
+  padding: 20px 0;
+  width: 630px;
+}
+
+canvas {
+  padding: 20px;
+  background-color: var(--main-color-yellow);
+}
+
+header > h1:hover {
+  cursor: pointer; /* pointer */
+}
+
+.main {
+  background-color: var(--main-color-yellow);
+  padding: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.list-alternatives {
+  list-style-type: none;
+  padding: 20px;
+}
+
+.list-item {
+  padding-top: 30px;
+}
+
+.gameNavigate {
+  background-color: var(--main-color-purple);
+  width: 20%;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  color: white; /* White text */
+  padding: 40px 60px; /* Some padding */
+  cursor: pointer;
+  float: none;
+  font-size: large;
+  box-shadow: 0 10px #999;
+}
+
+.gameNavigate:hover {
+  background-color: #3e8e41;
+}
+
+.gameNavigate:active {
+  box-shadow: 0 3px #666;
+  transform: translateY(4px);
+}
