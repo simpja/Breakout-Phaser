@@ -70,15 +70,16 @@ function create() {
 
   createHud(this);
 
-  // Add sprite to live along and underneath the game screen. Call it the fence
-
+  // Add sprite to live along and underneath the game screen. Call it the fence. this.physics.add.sprite(xpos, ypos, imageRef)
   bottomFence = this.physics.add.sprite(
-    game.config.height - 5,
-    game.config.width,
+    game.config.width / 2,
+    game.config.height + 50,
     "fence"
   );
-  // We don't want our fence to move (:
+  topFence = this.physics.add.sprite(game.config.width / 2, -50, "fence");
+  // We don't want our fences to move
   bottomFence.body.immovable = true;
+  topFence.body.immovable = true;
 
   // Add our images (ball, paddles) as sprites, objects that we can assign physical properties and animation.
   // sprites live in the scope of the scene
@@ -108,8 +109,9 @@ function create() {
 
   // Make ball collide with the bounds of the world.
   ball.body.setCollideWorldBounds(true);
-  // But we don't want it to collide with the bottom!
+  // But we don't want it to collide with the bottom or top!
   this.physics.world.checkCollision.down = false;
+  this.physics.world.checkCollision.up = false;
   // save bounds for checking when ball leaves screen in update function later in the script
   bounds = this.physics.world.bounds;
   // Let's make the ball bounce with zero loss - all energy is saved througout the collision.
@@ -128,6 +130,7 @@ function create() {
   this.physics.add.collider(ball, paddleTop, strikeBall, null, this);
   this.physics.add.collider(ball, paddleBottom, strikeBall, null, this);
   this.physics.add.overlap(ball, bottomFence, ballLeaveScreen, null, this);
+  this.physics.add.overlap(ball, topFence, ballLeaveScreen, null, this);
 }
 
 // Outside the functions we make these socket-connections that adjust the paddle positions when a user of the controllers emit an event.
@@ -165,6 +168,16 @@ function update() {
     paddleBottom.x < game.config.width - paddleBottom.width / 2
   ) {
     paddleBottom.x += paddleMoveStep;
+  }
+
+  // Turn on up and down arrow for top paddle
+  if (cursors.up.isDown && paddleTop.x > paddleTop.width / 2) {
+    paddleTop.x -= paddleMoveStep;
+  } else if (
+    cursors.down.isDown &&
+    paddleTop.x < game.config.width - paddleTop.width / 2
+  ) {
+    paddleTop.x += paddleMoveStep;
   }
 }
 
