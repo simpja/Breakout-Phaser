@@ -20,6 +20,7 @@ body {
 canvas {
   padding: 20px;
   background-color: var(--main-color-yellow);
+  float: left;
 }
 
 header > h1:hover {
@@ -33,13 +34,28 @@ header > h1:hover {
   text-align: center;
 }
 
-.list-alternatives {
-  list-style-type: none;
-  padding: 20px;
+.instructions-div {
+  float: left;
+  width: 630px;
+  padding: 20 0px;
+  background-color: var(--main-color-yellow);
 }
 
-.list-item {
-  padding-top: 30px;
+div > p {
+  float: left;
+  padding: 10px 20px;
+  margin: 0;
+  font-weight: 1000;
+  font-size: larger;
+}
+
+.instructions-list {
+  margin: 0;
+  float: inline-end;
+}
+
+li {
+  list-style-type: none;
 }
 
 .gameNavigate {

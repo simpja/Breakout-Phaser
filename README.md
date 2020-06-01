@@ -2,7 +2,7 @@
 
 ## What is it?
 
-### Using a local webserver you can easily create an instance of the classic Breakout game and use other devices as controllers!
+### Using a local webserver you can easily create an instance of the classic ping pong game and use other devices as controllers!
 
 ## How do you do it?
 
