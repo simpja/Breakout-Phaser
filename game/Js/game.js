@@ -59,6 +59,7 @@ function preload() {
   //The same as over, but in the middle of left and right
   this.load.image("ball", "Assets/img/ball.png");
   this.load.image("paddle", "Assets/img/paddle.png");
+  this.load.image("paddleTop", "Assets/img/paddleTop.png");
   this.load.image("brick", "Assets/img/brick.png");
   this.load.image("background", "Assets/img/starsBackground.jpg");
   this.load.image("fence", "Assets/img/fence.png");
@@ -93,7 +94,7 @@ function create() {
     game.config.height,
     "paddle"
   );
-  paddleTop = this.physics.add.sprite(game.config.width / 2, 0, "paddle");
+  paddleTop = this.physics.add.sprite(game.config.width / 2, 15, "paddleTop");
 
   // Define the Origo of the sprite.
   // when we position the x value of the sprite we now position the middle of the sprite, instead of the default left edge as in phaser 2.
@@ -105,7 +106,7 @@ function create() {
   // We scale them down in x and y direction respectively (the two input parameters)
   ball.setScale(0.2, 0.2);
   paddleBottom.setScale(0.7, 0.2);
-  paddleTop.setScale(-0.7, -0.2);
+  paddleTop.setScale(0.7, 0.2);
 
   // Make ball collide with the bounds of the world.
   ball.body.setCollideWorldBounds(true);
@@ -171,10 +172,10 @@ function update() {
   }
 
   // Turn on up and down arrow for top paddle
-  if (cursors.up.isDown && paddleTop.x > paddleTop.width / 2) {
+  if (cursors.down.isDown && paddleTop.x > paddleTop.width / 2) {
     paddleTop.x -= paddleMoveStep;
   } else if (
-    cursors.down.isDown &&
+    cursors.up.isDown &&
     paddleTop.x < game.config.width - paddleTop.width / 2
   ) {
     paddleTop.x += paddleMoveStep;
