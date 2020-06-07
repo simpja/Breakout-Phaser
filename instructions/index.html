@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <title>Breakout Phaser</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
+    <!-- Note that folder paths are relative to what the server sees when site is served. Meaning that 
+      you need to watch the paths used in the app.use('someServerPath', 'localPath') in the server.js file -->
+    <link rel="stylesheet" type="text/css" href="/instructions/style.css" />
   </head>
   <body>
     <header id="header">
@@ -38,6 +40,6 @@
       </p>
 
     </main>
-    <script src="script.js"></script>
+    <script src="/instructions/script.js"></script>
   </body>
 </html>

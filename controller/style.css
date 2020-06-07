@@ -1,0 +1,13 @@
+.range {
+  /* -webkit-appearance: none; */
+  /* background: none; */
+  display: block;
+  width: 100%;
+  height: 50vh;
+  margin: 20px 0px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  border-radius: 100%;
+  cursor: pointer;
+  position: relative;
+}

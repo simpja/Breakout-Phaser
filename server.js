@@ -3,22 +3,55 @@ const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const port = 3000;
+const path = require("path");
+const router = express.Router();
+// const routes = require("./routes/index");
 
-// The homepage
-app.use("/home/", express.static(__dirname + "/home/"));
-// Serve the game at localhost:3000/game/ using express static files.
-app.use("/game/", express.static(__dirname + "/game/"));
-// The instructions page
-app.use("/instructions/", express.static(__dirname + "/instructions/"));
+// For our home screen we add a route to the empty directory
+// the route simply serves the static html file in the home folder.
+router.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname + "/home/index.html"));
+});
+/*
+...And in order for this static HTML-file to reach its CSS- and js files (static assets), 
+we need to serve the home folder directory as static assets using app.use('path')
+However, this approach puts all assets in the same root folder
+Better then to add a virtual server path like this: app.use('virtual server path', 'local asset path');
+In that way, we can categorize all our assets in folders
+*/
+app.use("/home", express.static(__dirname + "/home/"));
 
+// Following the same approach as our home screen, we can serve our routes and their static assets the same way
+router.get("/instructions", (req, res) => {
+  res.sendFile(path.join(__dirname + "/instructions/index.html"));
+});
+app.use("/instructions", express.static(__dirname + "/instructions/"));
+
+router.get("/game", (req, res) => {
+  res.sendFile(path.join(__dirname + "/game/index.html"));
+});
+app.use("/game", express.static(__dirname + "/game/"));
+
+router.get("/game", (req, res) => {
+  res.sendFile(path.join(__dirname + "/game/index.html"));
+});
+app.use("/game", express.static(__dirname + "/game/"));
+
+router.get("/controllerBottom", (req, res) => {
+  res.sendFile(path.join(__dirname + "/controller/controllerBottom.html"));
+});
+router.get("/controllerTop", (req, res) => {
+  res.sendFile(path.join(__dirname + "/controller/controllerTop.html"));
+});
 // Serve the controllers at localhost:[port]/controllerTop/ and localhost:[port]/controllerBottom/ using static files. Spesifying the html-file since it is not called index.html.
 app.use("/controller/", express.static(__dirname + "/controller/"));
-app.get("/controllerBottom/*", function(req, res) {
+
+/* app.get("/controllerBottom/*", function(req, res) {
   res.sendFile(__dirname + "/controller/" + "controllerBottom.html");
 });
 app.get("/controllerTop/*", function(req, res) {
   res.sendFile(__dirname + "/controller/" + "controllerTop.html");
-});
+}); */
 
 // Handle socket stuff!
 io.on("connection", function(socket) {
@@ -34,6 +67,8 @@ io.on("connection", function(socket) {
     // console.log("hei controller 2");
   });
 });
+
+app.use("/", router);
 
 http.listen(port, function() {
   console.log(`listening on: ${port}`);
