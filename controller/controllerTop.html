@@ -5,21 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Controller Top</title>
-    <link rel="stylesheet" type="text/css" href="/controller/style.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/controller/styleButtonAndSlider.css"
+    />
+    <link rel="stylesheet" type="text/css" href="/assets/style.css" />
   </head>
 
   <body>
-    <h1>Top</h1>
-    <input
-      onchange="setPosition(this.value)"
-      oninput="setPosition(this.value)"
-      value="33"
-      class="range"
-      type="range"
-    />
+    <header id="header">
+      <h1>The Breakout Multiplayer Game</h1>
+    </header>
+    <main class="main">
+      <h1>Top</h1>
+      <label class="switch">
+        <input type="checkbox" id="switchValue" />
+        <span class="slider round"></span>
+      </label>
+      <input
+        onchange="setPosition(this.value)"
+        oninput="setPosition(this.value)"
+        value="33"
+        class="range"
+        type="range"
+      />
+    </main>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/assets/script.js"></script>
+
     <script>
       var socket = io(); //instantiate socket
+      // Apparently, this cheat toggle switch is not so easy to work with
+      // Hard to get onchange events.
+      var check = document.getElementById("switchValue");
+      var isChecked = check.checked;
+      console.log(isChecked);
 
       function setPosition(value) {
         socket.emit("set-position-top", value);

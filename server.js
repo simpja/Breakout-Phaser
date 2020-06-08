@@ -26,6 +26,7 @@ router.get("/instructions", (req, res) => {
   res.sendFile(path.join(__dirname + "/instructions/index.html"));
 });
 app.use("/instructions", express.static(__dirname + "/instructions/"));
+app.use("/assets", express.static(__dirname + "/assets/"));
 
 router.get("/game", (req, res) => {
   res.sendFile(path.join(__dirname + "/game/index.html"));
