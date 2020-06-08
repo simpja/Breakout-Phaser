@@ -18,11 +18,24 @@
       <h1>The Breakout Multiplayer Game</h1>
     </header>
     <main class="main">
-      <h1>Top</h1>
+      <h1 class="controllerLabel controllerLabelChosen" id="topController">
+        Controlling the <span id="controllerLabelSpan">top</span> paddle
+      </h1>
+      <h1 class="controllerLabel" id="bottomController">
+        Controlling the bottom paddle
+      </h1>
+
       <label class="switch">
-        <input type="checkbox" id="switchValue" />
+        <input
+          type="checkbox"
+          id="switchValue"
+          name="controller"
+          value="bottom"
+          onclick="updateUI(this);"
+        />
         <span class="slider round"></span>
       </label>
+
       <input
         onchange="setPosition(this.value)"
         oninput="setPosition(this.value)"
@@ -38,12 +51,44 @@
       var socket = io(); //instantiate socket
       // Apparently, this cheat toggle switch is not so easy to work with
       // Hard to get onchange events.
-      var check = document.getElementById("switchValue");
-      var isChecked = check.checked;
-      console.log(isChecked);
+      var toggleSwitch = document.getElementById("switchValue");
+      var topLabel = document.getElementById("topController");
+      var bottomLabel = document.getElementById("bottomController");
+      var controllerLabelSpan = document.getElementById("controllerLabelSpan");
 
       function setPosition(value) {
-        socket.emit("set-position-top", value);
+        switch (toggleSwitch.checked) {
+          case true:
+            socket.emit("set-position-top", value);
+            console.log("top!");
+            break;
+          case false:
+            socket.emit("set-position-bottom", value);
+            console.log("bottom!");
+            break;
+        }
+      }
+
+      function updateUI(toggleSwitch) {
+        console.log(toggleSwitch.checked);
+        switch (toggleSwitch.checked) {
+          case true:
+            console.log("top chosen!");
+            controllerLabelSpan.innerHTML = "Sonja";
+            // add class to topController
+            topLabel.classList.toggle("controllerLabelChosen");
+            // remove class from bottomController
+            bottomLabel.classList.toggle("controllerLabelChosen");
+            break;
+          case false:
+            console.log("bottom chosen!");
+            controllerLabelSpan.innerHTML = "Harald";
+            // add class to topController
+            topLabel.classList.toggle("controllerLabelChosen");
+            // remove class from bottomController
+            bottomLabel.classList.toggle("controllerLabelChosen");
+            break;
+        }
       }
     </script>
   </body>
