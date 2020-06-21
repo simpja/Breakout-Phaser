@@ -18,11 +18,8 @@
       <h1>The Breakout Multiplayer Game</h1>
     </header>
     <main class="main">
-      <h1 class="controllerLabel controllerLabelChosen" id="topController">
+      <h1 class="controllerLabel" id="controllerLabel">
         Controlling the <span id="controllerLabelSpan">top</span> paddle
-      </h1>
-      <h1 class="controllerLabel" id="bottomController">
-        Controlling the bottom paddle
       </h1>
 
       <label class="switch">
@@ -52,8 +49,7 @@
       // Apparently, this cheat toggle switch is not so easy to work with
       // Hard to get onchange events.
       var toggleSwitch = document.getElementById("switchValue");
-      var topLabel = document.getElementById("topController");
-      var bottomLabel = document.getElementById("bottomController");
+      var label = document.getElementById("controllerLabel");
       var controllerLabelSpan = document.getElementById("controllerLabelSpan");
 
       function setPosition(value) {
@@ -70,25 +66,30 @@
       }
 
       function updateUI(toggleSwitch) {
-        console.log(toggleSwitch.checked);
+        // console.log(toggleSwitch.checked);
         switch (toggleSwitch.checked) {
           case true:
-            console.log("top chosen!");
-            controllerLabelSpan.innerHTML = "Sonja";
-            // add class to topController
-            topLabel.classList.toggle("controllerLabelChosen");
-            // remove class from bottomController
-            bottomLabel.classList.toggle("controllerLabelChosen");
+            // console.log("top chosen!");
+            controllerLabelSpan.innerHTML = "top";
+            toggleChangePaddle();
+            // add class to controllerLabel
+
             break;
           case false:
-            console.log("bottom chosen!");
-            controllerLabelSpan.innerHTML = "Harald";
-            // add class to topController
-            topLabel.classList.toggle("controllerLabelChosen");
-            // remove class from bottomController
-            bottomLabel.classList.toggle("controllerLabelChosen");
+            // console.log("bottom chosen!");
+            controllerLabelSpan.innerHTML = "bottom";
+            // add class to controllerLabel
+            toggleChangePaddle();
             break;
         }
+      }
+
+      function toggleChangePaddle() {
+        //label.classList.toggle("controllerLabelChosen");
+        controllerLabelSpan.classList.toggle("controllerLabelSpanChange");
+        setTimeout(() => {
+          controllerLabelSpan.classList.toggle("controllerLabelSpanChange");
+        }, 1100);
       }
     </script>
   </body>
