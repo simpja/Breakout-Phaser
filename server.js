@@ -38,20 +38,17 @@ router.get("/game", (req, res) => {
 });
 app.use("/game", express.static(__dirname + "/game/"));
 
-router.get("/controllerBottom", (req, res) => {
-  res.sendFile(path.join(__dirname + "/controller/controllerBottom.html"));
+router.get("/controller", (req, res) => {
+  res.sendFile(path.join(__dirname + "/controller/controller.html"));
 });
-router.get("/controllerTop", (req, res) => {
-  res.sendFile(path.join(__dirname + "/controller/controllerTop.html"));
-});
-// Serve the controllers at localhost:[port]/controllerTop/ and localhost:[port]/controllerBottom/ using static files. Spesifying the html-file since it is not called index.html.
+// Serve the controllers at localhost:[port]/controller/ and localhost:[port]/controllerBottom/ using static files. Spesifying the html-file since it is not called index.html.
 app.use("/controller/", express.static(__dirname + "/controller/"));
 
 /* app.get("/controllerBottom/*", function(req, res) {
   res.sendFile(__dirname + "/controller/" + "controllerBottom.html");
 });
-app.get("/controllerTop/*", function(req, res) {
-  res.sendFile(__dirname + "/controller/" + "controllerTop.html");
+app.get("/controller/*", function(req, res) {
+  res.sendFile(__dirname + "/controller/" + "controller.html");
 }); */
 
 // Handle socket stuff!

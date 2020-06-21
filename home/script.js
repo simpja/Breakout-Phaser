@@ -12,13 +12,9 @@ function gameNavigateClick(player) {
       // Redirect user to controller bottom
       window.location = "../game/";
       break;
-    case "one":
-      // Redirect user to controller bottom
-      window.location = "../controllerBottom/";
-      break;
     case "two":
       // Redirect user to controller top
-      window.location = "../controllerTop/";
+      window.location = "../controller/";
       break;
     case "instructions":
       window.location = "../instructions/";
