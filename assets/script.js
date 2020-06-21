@@ -3,5 +3,5 @@ header.addEventListener("click", clickHeader);
 
 function clickHeader() {
   console.log(window.location);
-  window.location = "../home/";
+  window.location = "../";
 }

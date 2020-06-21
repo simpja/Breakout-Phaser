@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Controller Top</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/controller/styleButtonAndSlider.css"
+    />
+    <link rel="stylesheet" type="text/css" href="/assets/style.css" />
+  </head>
+
+  <body>
+    <header id="header">
+      <h1>The Breakout Multiplayer Game</h1>
+    </header>
+    <main class="main">
+      <h1 class="controllerLabel" id="controllerLabel">
+        Controlling the <span id="controllerLabelSpan">bottom</span> paddle
+      </h1>
+
+      <label class="switch">
+        <input
+          type="checkbox"
+          id="switchValue"
+          name="controller"
+          value="bottom"
+          onclick="updateUI(this);"
+        />
+        <span class="slider round"></span>
+      </label>
+
+      <input
+        onchange="setPosition(this.value)"
+        oninput="setPosition(this.value)"
+        value="33"
+        class="range"
+        type="range"
+      />
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/assets/script.js"></script>
+
+    <script>
+      var socket = io(); //instantiate socket
+      // Apparently, this cheat toggle switch is not so easy to work with
+      // Hard to get onchange events.
+      var toggleSwitch = document.getElementById("switchValue");
+      var label = document.getElementById("controllerLabel");
+      var controllerLabelSpan = document.getElementById("controllerLabelSpan");
+
+      function setPosition(value) {
+        switch (toggleSwitch.checked) {
+          case true:
+            socket.emit("set-position-top", value);
+            console.log("top!");
+            break;
+          case false:
+            socket.emit("set-position-bottom", value);
+            console.log("bottom!");
+            break;
+        }
+      }
+
+      function updateUI(toggleSwitch) {
+        // console.log(toggleSwitch.checked);
+        switch (toggleSwitch.checked) {
+          case true:
+            // console.log("top chosen!");
+            controllerLabelSpan.innerHTML = "top";
+            toggleChangePaddle();
+            // add class to controllerLabel
+
+            break;
+          case false:
+            // console.log("bottom chosen!");
+            controllerLabelSpan.innerHTML = "bottom";
+            // add class to controllerLabel
+            toggleChangePaddle();
+            break;
+        }
+      }
+
+      function toggleChangePaddle() {
+        //label.classList.toggle("controllerLabelChosen");
+        controllerLabelSpan.classList.toggle("controllerLabelSpanChange");
+        setTimeout(() => {
+          controllerLabelSpan.classList.toggle("controllerLabelSpanChange");
+        }, 1100);
+      }
+    </script>
+  </body>
+</html>

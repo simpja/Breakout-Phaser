@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <title>Breakout Phaser</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
+    <!-- Note that folder paths are relative to what the server sees when site is served. Meaning that 
+      you need to watch the paths used in the app.use('someServerPath', 'localPath') in the server.js file -->
+    <link rel="stylesheet" type="text/css" href="/assets/style.css" />
   </head>
   <body>
     <header id="header">
@@ -15,7 +17,7 @@
 
       <h2 class="sub-header"> What is it? </h2>
 
-<h3> Using a local webserver you can easily create an instance of the classic Breakout game and use other devices as controllers!</h3>
+      <h3> Using a local webserver you can easily create an instance of the classic Breakout game and use other devices as controllers!</h3>
 
       <h2 class="sub-header">How do you do it?</h2>
       <ol>
@@ -24,9 +26,8 @@
         <li> Navigate to the root folder using a terminal </li>
         <li> Run `ipconfig` and copy your IPv4 address under wireless LAN adapter Wi-Fi. This is your local server IP<li>address. Let's name this parameter localServerIP </li>
         <li> Run `node server` to start the server on localhost </li>
-        <li> Using the unit you want to present the screen from, navigate to _localServerIP:3000/home/_ in your browser and choose **Be the Game Screen** </li>
-        <li> Using the unit for the first controller navigate to the same page but choose **Be Player One** </li>
-        <li> Repeat for the second user, but choose to be player two instead. </li>
+        <li> Using the unit you want to present the screen from, navigate to _localServerIP:3000/_ in your browser and choose **Be the Game Screen** </li>
+        <li> Using the units for controllers, navigate to the same page but choose **controllers** </li>
         <li> Play! </li>
       </ol>
       <h2 class="sub-header">How does it work?</h2>
@@ -38,6 +39,6 @@
       </p>
 
     </main>
-    <script src="script.js"></script>
+    <script src="/assets/script.js"></script>
   </body>
 </html>

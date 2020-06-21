@@ -1,0 +1,51 @@
+:root {
+  --main-color-purple: #6b5b95;
+  --main-color-yellow: #feb236;
+  --main-color-red: #d64161;
+  --main-color-orange: #ff7b25;
+  --main-color-milk: #fefbd8;
+}
+
+@keyframes textTransition {
+  0% {
+    font-size: large;
+  }
+  50% {
+    font-size: x-large;
+  }
+  100% {
+    font-size: large;
+  }
+}
+
+body {
+  width: 90%;
+}
+
+#header {
+  background-color: #f1f1f1;
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+}
+
+header > h1:hover {
+  cursor: pointer;
+}
+
+.controllerLabel {
+  height: 40px;
+  font-size: large;
+}
+
+.controllerLabelSpanChange {
+  animation-name: textTransition;
+  animation-duration: 0.3s;
+}
+
+.main {
+  background-color: var(--main-color-yellow);
+  padding: 20px;
+  width: 100%;
+  text-align: left;
+}
