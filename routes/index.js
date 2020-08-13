@@ -22,14 +22,13 @@ router.post("/addGame", async (req, res) => {
   let gameExists = false;
   try {
     const game = new Game(req.body);
-    // First check if there are results wth the same name
+    // If the game name already exists, we do not want to create a new one
     await Game.findOne({ name: game.name }, (err, document) => {
       if (err) {
         console.log(
           `Something failed while fetching documents: ${err.message}`
         );
       } else if (document) {
-        // Document already existed, don't create
         console.log("Game with game name already exists!");
         gameExists = true;
       } else {
@@ -38,12 +37,9 @@ router.post("/addGame", async (req, res) => {
         gameExists = false;
       }
     });
-    if (!gameExists) {
-      console.log("This shouldnt happen!!!");
-      console.log(
-        "The order is broken... proably some await async magic needed..."
-      );
 
+    if (!gameExists) {
+      console.log(`New game created: ${game.name}`);
       await game.save();
     }
     res.redirect(`/game?gameName=${req.body.name}`);
