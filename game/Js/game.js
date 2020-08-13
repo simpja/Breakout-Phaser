@@ -25,8 +25,7 @@ var config = {
 // Initiate phaser game object using HTML Canvas
 var game = new Phaser.Game(config);
 
-// Variable decalaration
-var bounds;
+// Global variable decalaration
 var frictionFactor = 20; // hehe, fakk physics.
 var paddleMoveStep = 10;
 var gameStatus = "start";
@@ -37,10 +36,7 @@ var paddleTop;
 var bricks;
 var newBrick;
 var brickInfo;
-var score = 0;
-var lives = 3;
-let livesText;
-let livesLostText;
+var scoreHolder = 0;
 var cursors;
 var spacebar;
 var paddlePrevBottom = {
@@ -51,36 +47,24 @@ var paddlePrevTop = {
   x: 1,
   y: 1,
 };
+var hasGoneOut;
 
 function preload() {
   //this.scale.pageAlignHorizontally = true;
   //Aligns the canvas in the middle between top and bottom of the screen
   //this.scale.pageAlignVertically = true;
   //The same as over, but in the middle of left and right
+  this.load.image("fence", "Assets/img/fence.png");
   this.load.image("ball", "Assets/img/ball.png");
   this.load.image("paddle", "Assets/img/paddle.png");
   this.load.image("paddleTop", "Assets/img/paddleTop.png");
   this.load.image("brick", "Assets/img/brick.png");
   this.load.image("background", "Assets/img/starsBackground.jpg");
-  this.load.image("fence", "Assets/img/fence.png");
 }
 
 function create() {
   //Add image as background
   this.add.image(0, 0, "background").setOrigin(0, 0);
-
-  createHud(this);
-
-  // Add sprite to live along and underneath the game screen. Call it the fence. this.physics.add.sprite(xpos, ypos, imageRef)
-  bottomFence = this.physics.add.sprite(
-    game.config.width / 2,
-    game.config.height + 50,
-    "fence"
-  );
-  topFence = this.physics.add.sprite(game.config.width / 2, -50, "fence");
-  // We don't want our fences to move
-  bottomFence.body.immovable = true;
-  topFence.body.immovable = true;
 
   // Add our images (ball, paddles) as sprites, objects that we can assign physical properties and animation.
   // sprites live in the scope of the scene
@@ -113,8 +97,7 @@ function create() {
   // But we don't want it to collide with the bottom or top!
   this.physics.world.checkCollision.down = false;
   this.physics.world.checkCollision.up = false;
-  // save bounds for checking when ball leaves screen in update function later in the script
-  bounds = this.physics.world.bounds;
+
   // Let's make the ball bounce with zero loss - all energy is saved througout the collision.
   ball.setBounce(1);
   // And give the ball an initial speed and direction.
@@ -130,8 +113,6 @@ function create() {
   gameStatus = "running";
   this.physics.add.collider(ball, paddleTop, strikeBall, null, this);
   this.physics.add.collider(ball, paddleBottom, strikeBall, null, this);
-  this.physics.add.overlap(ball, bottomFence, ballLeaveScreen, null, this);
-  this.physics.add.overlap(ball, topFence, ballLeaveScreen, null, this);
 }
 
 // Outside the functions we make these socket-connections that adjust the paddle positions when a user of the controllers emit an event.
@@ -143,6 +124,13 @@ socket.on("set-position-top", (x) => {
 });
 
 function update() {
+  // Check if ball is outside bounds
+  hasGoneOut = hasGoneOutCheck(this.physics.world);
+  if (hasGoneOut != null) {
+    console.log(`The ball has gone out! ${hasGoneOut} lost!`);
+    ballLeaveScreen(hasGoneOut);
+  }
+
   // Check if game is paused, and reset if space is pushed
   if (cursors.space.isDown && gameStatus == "paused") {
     livesLostText.visible = false;
@@ -184,30 +172,6 @@ function update() {
 
 // Functions following!
 
-function createHud(scene) {
-  // Make the text objects to write lives remaining and score in.
-  const scoreText = scene.add.text(5, 5, "Points: " + score, {
-    font: "10px Arial",
-    fill: "#0095DD",
-  });
-  livesText = scene.add.text(game.config.width - 5, 5, "Lives: " + lives, {
-    font: "10px Arial",
-    fill: "#0095DD",
-  });
-  livesText.setOrigin(1, 0);
-  livesLostText = scene.add.text(
-    game.config.width / 2,
-    game.config.height / 2,
-    "Life lost, press space to continue",
-    {
-      font: "10px Arial",
-      fill: "#0095DD",
-    }
-  );
-  livesLostText.setOrigin(1, 0);
-  livesLostText.visible = false;
-}
-
 function setXpos(paddle, newX) {
   const paddleWidth = Math.abs(paddle.width);
   // | --===--- |
@@ -230,15 +194,23 @@ function strikeBall(ball, paddle) {
   }
 }
 
-function ballLeaveScreen() {
+var happenedOnce = false;
+function ballLeaveScreen(loser) {
   gameStatus = "paused";
-  ball.disableBody(true, false);
-  lives--;
-  if (lives) {
-    livesText.setText("Lives: " + lives);
-    livesLostText.visible = true;
-  } else {
-    alert("Game over!");
+  ball.disableBody(true, true);
+  if (!happenedOnce) {
+    happenedOnce = true;
+    alert(`Game over, ${loser} lost!`);
     location.reload();
+  }
+}
+
+function hasGoneOutCheck(world) {
+  if (ball.body.y > world.bounds.height) {
+    return "bottom";
+  } else if (ball.body.y < 0) {
+    return "top";
+  } else {
+    return null;
   }
 }

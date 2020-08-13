@@ -9,11 +9,11 @@ function clickHeader() {
 function gameNavigateClick(player) {
   switch (player) {
     case "game":
-      // Redirect user to controller bottom
-      window.location = "../game/";
+      // Redirect user to game page
+      window.location = "../addGame/";
       break;
-    case "two":
-      // Redirect user to controller top
+    case "controller":
+      // Redirect user to controller page
       window.location = "../controller/";
       break;
     case "instructions":

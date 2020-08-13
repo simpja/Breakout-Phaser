@@ -6,10 +6,18 @@ const gameSchema = new mongoose.Schema({
   name: {
     type: String,
     trim: true,
+    unique: true,
     required: "Please enter a game name", // instead of just a boolean, true, this will print back our specified error message
   },
   slug: String,
-  highscore: Number,
+  scoreTop: {
+    type: Number,
+    default: 0,
+  },
+  scoreBottom: {
+    type: Number,
+    default: 0,
+  },
 });
 
 gameSchema.pre("save", function(next) {
